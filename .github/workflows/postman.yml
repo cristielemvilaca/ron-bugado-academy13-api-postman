@@ -62,7 +62,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: https://github.com/cristielemvilaca/ron-bugado-academy13-api-postman.git/Report.html
+      url: https://github.com/cristielemvilaca/ron-bugado-academy13-api-postman
     steps:
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -80,4 +80,3 @@ jobs:
       - name: Deploy to Github Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        
