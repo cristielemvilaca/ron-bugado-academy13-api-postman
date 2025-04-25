@@ -60,7 +60,7 @@ jobs:
 
       - name: Step 3 Execute collection
 
-        run: newman run Ron_Bugado.postman_collection.json -e Dev-ronbugado.postman_environment.json --reporters cli,htmlextra --reporter-htmlextra-export ./result/Report.html --reporter-htmlextra-browserTitle "Teste API Postman" --reporter-htmlextra-title "Teste API Postman"
+        run: newman run "Ron_Bugado.postman_collection.json" -e "Dev-ronbugado.postman_environment.json" --delay-request 1, -r htmlextra --reporter-htmlextra-export ./result/Report.html
       
       # Runs a set of command using the runners shell
 
