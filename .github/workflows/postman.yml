@@ -1,74 +1,73 @@
 name: Testes API Postman
 
-on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
-
+on: [push, workflow_dispatch]
+  
 jobs:
 
+ 
   test:
     name: Testes API
     runs-on: ubuntu-latest
-
     steps:
-      - name: Copiando os arquivos para máquina virtual
+      
+      - name: Copiando os arquivos para maquina virtual
         uses: actions/checkout@v4
 
+      # Runs a set of commands using the runners shell
       - name: Etapa 01 - Verificação versão do Node e Newman
         run: |
-          node --version
-          npm --version
-
-      - name: Etapa 02 - Instalação do Newman e Reporter
+          newman --version && node --version && ls
+              
+      # Runs a single command using the runners shell
+      - name: Etapa 02 - Html Extra Reporter
         run: |
+          npm fund
           npm install -g newman
-          npm install -g newman-reporter-htmlextra
+          sudo npm install -g newman-reporter-htmlextra        
 
+      # Runs a set of command using the runners shell
       - name: Etapa 03 - Rodando as Collections de Testes
-        run: 
-          newman run "Ron_Bugado.postman_collection.json" \
-            -e "Dev-ronbugado.postman_environment.json" \
-            --delay-request 1000 \
-            -r htmlextra \
-            --reporter-htmlextra-export result/Report.html
+        run: |
 
+          newman run "Ron_Bugado.postman_collection.json" -e "Dev-ronbugado.postman_environment.json" --delay-request 1 -r htmlextra --reporter-htmlextra-export ./result/Report.html
+
+      # Runs a set of command using the runners shell
       - name: Etapa 04 - Salvando o Resultado dos Testes
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: report
-          path: result/
-
+          path: ./result/
+             
   deploy:
-    name: Configurar site
+    name: Deploy GitHub Pages 🌐
     runs-on: ubuntu-latest
     if: always()
-    needs: [test]
-
+    needs: 
+      - test
     permissions:
       contents: read
       pages: write
       id-token: write
-
     environment:
       name: github-pages
-
+      url: https://cristielemvilaca.github.io/ron-bugado-academy13-api-postman/Report.html
     steps:
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with: 
           name: report
-          path: ./report
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: ./report
+          path: ./
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to Github Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
