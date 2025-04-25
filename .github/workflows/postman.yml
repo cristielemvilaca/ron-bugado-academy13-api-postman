@@ -26,8 +26,7 @@ jobs:
           npm install -g newman-reporter-htmlextra
 
       - name: Etapa 03 - Rodando as Collections de Testes
-        run: |
-          mkdir -p result
+        run: 
           newman run "Ron_Bugado.postman_collection.json" \
             -e "Dev-ronbugado.postman_environment.json" \
             --delay-request 1000 \
